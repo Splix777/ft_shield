@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #define PID_FILE "/run/ft_shield.pid"
-#define BIN_PATH "/bin/ft_shield"
+#define BIN_PATH "/sbin/ft_shield"
 #define LOG_PATH "/tmp/ft_shield.log"
 #define SERVICE_PATH "/etc/systemd/system/ft_shield.service"
 #define SERVICE_SYMLINK "/etc/systemd/system/multi-user.target.wants/ft_shield.service"
@@ -14,7 +14,7 @@ int main()
 
     // Remove the /bin/ft_shield file
     if (unlink(BIN_PATH) < 0)
-        perror("Cannot remove /bin/ft_shield");
+        perror("Cannot remove /sbin/ft_shield");
 
     // Rmove the logs at /tmp/ft_shield.log
     if (unlink(LOG_PATH) < 0)

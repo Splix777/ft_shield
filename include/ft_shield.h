@@ -3,7 +3,7 @@
 
 #define SERVICE_NAME "ft_shield"
 #define PID_FILE "/run/ft_shield.pid"
-#define BIN_LOCATION "/bin/ft_shield"
+#define BIN_LOCATION "/sbin/ft_shield"
 #define SYSTEMD_SERVICE_FILE "/etc/systemd/system/ft_shield.service"
 #define SYSTEMD_CONFIG "[Unit]\n\
                         Description=ft_shield\n\
