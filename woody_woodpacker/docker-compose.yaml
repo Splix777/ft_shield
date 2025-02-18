@@ -1,9 +1,0 @@
-services:
-  woody_woodpacker:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: woody_woodpacker
-    volumes:
-      - .:/app
-    tty: true

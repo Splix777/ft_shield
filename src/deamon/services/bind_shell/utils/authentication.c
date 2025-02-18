@@ -7,7 +7,7 @@ static int verify_password(const char *password, const char *stored_hash)
 {
     char modifiable_password[CHAR_BUFFER];
 
-    strncpy(modifiable_password, password, CHAR_BUFFER);
+    strncpy(modifiable_password, password, CHAR_BUFFER - 1);
     modifiable_password[CHAR_BUFFER - 1] = '\0';
     modifiable_password[strcspn(modifiable_password, "\n")] = 0;
 

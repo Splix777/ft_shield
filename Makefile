@@ -1,6 +1,6 @@
 # Compiler and flags
 GCC = gcc
-CFLAGS = -Wall -Wextra -Werror -O3 -static -obfuscator-llvm
+CFLAGS = -Wall -Wextra -Werror -O3 -obfuscator-llvm
 LDFLAGS = 
 
 # Directories
@@ -17,12 +17,21 @@ SRC_FILES = $(shell find $(SRC_DIR) -name '*.c')
 # Generate corresponding .o files in the obj directory
 OBJ_FILES = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC_FILES))
 
+# Colors
+GREEN = \033[32m
+RESET = \033[0m
+
 # Default target
 all: $(TARGET) pack
 
+unpacked: $(TARGET)
+
 # Link object files into the target binary
 $(TARGET): $(OBJ_FILES)
+	@printf "Linking %-42s" "$(NAME)"
 	@$(GCC) $(CFLAGS) $(LDFLAGS) -o $@ $^
+	@echo "$(GREEN)[ OK ]$(RESET)"
+	@echo "$(GREEN)Binary size: $$(wc -c < $@) bytes$(RESET)"
 
 # Compile source files into object files
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
@@ -30,24 +39,31 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@$(GCC) $(CFLAGS) -I$(INCLUDE_DIR) -c -o $@ $<
 
 pack:
-	@cd $(PACKER_DIR) && make
+	@printf "Packing %-42s" "$(TARGET)"
+	@(cd $(PACKER_DIR) && make) >/dev/null 2>&1
 	@./$(PACKER_DIR)/$(PACKER) -f $(TARGET) -o $(TARGET)_packed
 	@rm -f $(TARGET)
 	@mv $(TARGET)_packed $(TARGET)
+	@echo "$(GREEN)[ OK ]$(RESET)"
 	@echo "Packed binary: $(TARGET)"
+
 
 # Clean up build artifacts
 clean:
+	@printf "Cleaning objects... %-2s"
 	@rm -rf $(OBJ_DIR)
+	@echo "$(GREEN)[ OK ]$(RESET)"
 
 fclean: clean
-	@sudo ./clean
+	@printf "Cleaning binaries... %-1s"
+	@(sudo ./clean) >/dev/null 2>&1
 	@rm -f $(TARGET)
-	@cd $(PACKER_DIR) && make fclean
+	@(cd $(PACKER_DIR) && make fclean) >/dev/null 2>&1
+	@echo "$(GREEN)[ OK ]$(RESET)"
 
 re: fclean all
 
-debug: CFLAGS += -g3 -DDEBUG
+debug: CFLAGS += -g3 -DDEBUG -fsanitize=address
 debug: re
 
 .PHONY: all pack clean fclean re debug
