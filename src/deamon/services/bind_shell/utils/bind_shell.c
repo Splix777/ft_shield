@@ -81,7 +81,7 @@ void spawn_shell(t_client *client)
         setenv("PATH", "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin", 1);
         setenv("PS1", "$USER@$USER:~$PWD$ ", 1);
 
-        execl("/bin/sh", "sh", NULL);
+        execlp("sh", "sh", "-c", "stty raw -echo; exec bash --norc --noprofile -i", NULL);
         exit(EXIT_FAILURE);
     }
     else
